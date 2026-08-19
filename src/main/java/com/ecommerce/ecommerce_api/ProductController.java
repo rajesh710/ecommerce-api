@@ -1,5 +1,6 @@
 package com.ecommerce.ecommerce_api;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,7 @@ public class ProductController {
     private ProductRepository productRepository;
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
+    public Product createProduct(@Valid @RequestBody Product product) {
         return productRepository.save(product);
     }
 
@@ -27,13 +28,14 @@ public class ProductController {
         return productRepository.findById(id).orElse(null);
     }
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
+    public Product updateProduct(@PathVariable Long id, @Valid @RequestBody Product updatedProduct) {
         Product existingProduct = productRepository.findById(id).orElse(null);
         if (existingProduct != null) {
             existingProduct.setName(updatedProduct.getName());
             existingProduct.setDescription(updatedProduct.getDescription());
             existingProduct.setPrice(updatedProduct.getPrice());
             existingProduct.setStockQuantity(updatedProduct.getStockQuantity());
+            existingProduct.setCategory(updatedProduct.getCategory());
             return productRepository.save(existingProduct);
         }
         return null;
