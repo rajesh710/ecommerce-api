@@ -69,13 +69,40 @@ public class OrderController {
 
         orderRepository.save(order);
 
-        return ResponseEntity.ok(order);
+        return ResponseEntity.ok(mapToResponse(order));
     }
 
     @GetMapping
-    public List<Order> getMyOrders(Authentication authentication) {
+    public List<OrderResponse> getMyOrders(Authentication authentication) {
         String username = authentication.getName();
         User user = userRepository.findByUsername(username).orElse(null);
-        return orderRepository.findByUserId(user.getId());
+        List<Order> orders = orderRepository.findByUserId(user.getId());
+
+        List<OrderResponse> responses = new ArrayList<>();
+        for (Order order : orders) {
+            responses.add(mapToResponse(order));
+        }
+        return responses;
     }
+
+    private OrderResponse mapToResponse(Order order) {
+        OrderResponse response = new OrderResponse();
+        response.setId(order.getId());
+        response.setStatus(order.getStatus());
+        response.setTotalAmount(order.getTotalAmount());
+        response.setOrderDate(order.getOrderDate());
+
+        List<OrderItemResponse> itemResponses = new ArrayList<>();
+        for (OrderItem item : order.getItems()) {
+            OrderItemResponse itemResponse = new OrderItemResponse();
+            itemResponse.setProductName(item.getProduct().getName());
+            itemResponse.setQuantity(item.getQuantity());
+            itemResponse.setPriceAtPurchase(item.getPriceAtPurchase());
+            itemResponses.add(itemResponse);
+        }
+        response.setItems(itemResponses);
+
+        return response;
+    }
+
 }
