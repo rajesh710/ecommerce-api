@@ -12,6 +12,8 @@ Built to apply backend engineering concepts in a domain I already understood fro
 - **Order placement** — validates stock, calculates totals server-side, snapshots price at time of purchase, and atomically deducts inventory
 - **User-scoped data access** — users can only view their own order history
 - **Clean API responses** — DTOs used to prevent leaking sensitive fields (e.g., password hashes) or internal data (e.g., stock counts) in API responses
+- **Shopping cart** — add, view, and remove items; automatically merges quantity if a product is already in the cart
+- **Order payment tracking** — orders track payment status (PENDING/PAID) alongside fulfillment status
 
 ## Tech Stack
 
@@ -26,12 +28,14 @@ Built to apply backend engineering concepts in a domain I already understood fro
 Controller → Repository → MySQL
 
 
-Entities: `User`, `Product`, `Category`, `Order`, `OrderItem`
+Entities: `User`, `Product`, `Category`, `Order`, `OrderItem`, `Cart`, `CartItem`
 
 - `Product` ↔ `Category`: Many-to-One
 - `Order` ↔ `User`: Many-to-One
 - `Order` ↔ `OrderItem`: One-to-Many (cascade)
 - `OrderItem` ↔ `Product`: Many-to-One
+- `Cart` ↔ `User`: One-to-One
+- `Cart` ↔ `CartItem`: One-to-Many (cascade, orphan removal)
 
 ## API Endpoints
 
@@ -47,6 +51,10 @@ Entities: `User`, `Product`, `Category`, `Order`, `OrderItem`
 | POST | `/categories` | Admin only | Create a category |
 | POST | `/orders` | Yes | Place an order |
 | GET | `/orders` | Yes | View your own order history |
+| POST | `/cart/add` | Yes | Add a product to your cart |
+| GET | `/cart` | Yes | View your cart |
+| DELETE | `/cart/remove/{productId}` | Yes | Remove a product from your cart |
+| PUT | `/orders/{id}/pay` | Yes | Mark an order as paid |
 
 ## Running Locally
 
