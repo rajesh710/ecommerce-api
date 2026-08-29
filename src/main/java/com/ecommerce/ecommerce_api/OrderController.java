@@ -35,6 +35,7 @@ public class OrderController {
         order.setUser(user);
         order.setOrderDate(LocalDateTime.now());
         order.setStatus("PENDING");
+        order.setPaymentStatus("PENDING"); // add this line
 
         List<OrderItem> orderItems = new ArrayList<>();
         double total = 0.0;
@@ -103,6 +104,19 @@ public class OrderController {
         response.setItems(itemResponses);
 
         return response;
+    }
+    @PutMapping("/{id}/pay")
+    public ResponseEntity<?> markAsPaid(@PathVariable Long id, Authentication authentication) {
+        Order order = orderRepository.findById(id).orElse(null);
+        if (order == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        order.setPaymentStatus("PAID");
+        order.setStatus("COMPLETED");
+        orderRepository.save(order);
+
+        return ResponseEntity.ok(mapToResponse(order));
     }
 
 }

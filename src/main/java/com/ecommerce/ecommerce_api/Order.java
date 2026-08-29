@@ -15,6 +15,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String paymentStatus; // "PENDING", "PAID", "FAILED"
 
     @ManyToOne
     @JoinColumn(name = "user_id")
