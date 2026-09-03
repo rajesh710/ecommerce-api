@@ -1,9 +1,9 @@
-package com.ecommerce.ecommerce_api;
+package com.ecommerce.ecommerce_api.dto;
 
 import lombok.Data;
 
 @Data
-public class OrderItemRequest {
+public class CartItemRequest {
     private Long productId;
     private Integer quantity;
 }

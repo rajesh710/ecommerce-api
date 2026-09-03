@@ -1,28 +1,26 @@
-package com.ecommerce.ecommerce_api;
+package com.ecommerce.ecommerce_api.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "order_items")
+@Table(name = "cart_items")
 @Data
-public class OrderItem {
+public class CartItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "cart_id")
     @JsonIgnore
-    private Order order;
+    private Cart cart;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
     private Integer quantity;
-
-    private Double priceAtPurchase;
 }

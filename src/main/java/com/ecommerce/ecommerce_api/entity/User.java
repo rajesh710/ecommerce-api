@@ -1,6 +1,5 @@
-package com.ecommerce.ecommerce_api;
+package com.ecommerce.ecommerce_api.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;

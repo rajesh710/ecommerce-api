@@ -1,5 +1,6 @@
-package com.ecommerce.ecommerce_api;
+package com.ecommerce.ecommerce_api.repository;
 
+import com.ecommerce.ecommerce_api.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

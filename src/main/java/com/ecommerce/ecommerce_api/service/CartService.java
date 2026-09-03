@@ -1,16 +1,20 @@
-package com.ecommerce.ecommerce_api;
+package com.ecommerce.ecommerce_api.service;
 
+import com.ecommerce.ecommerce_api.dto.CartItemRequest;
+import com.ecommerce.ecommerce_api.entity.Cart;
+import com.ecommerce.ecommerce_api.entity.CartItem;
+import com.ecommerce.ecommerce_api.entity.Product;
+import com.ecommerce.ecommerce_api.entity.User;
+import com.ecommerce.ecommerce_api.repository.CartRepository;
+import com.ecommerce.ecommerce_api.repository.ProductRepository;
+import com.ecommerce.ecommerce_api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 
-@RestController
-@RequestMapping("/cart")
-public class CartController {
+@Service
+public class CartService {
 
     @Autowired
     private CartRepository cartRepository;
@@ -34,46 +38,36 @@ public class CartController {
         return cart;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addToCart(@RequestBody CartItemRequest request, Authentication authentication) {
-        Cart cart = getOrCreateCart(authentication.getName());
-
+    public Cart addToCart(CartItemRequest request, String username) {
+        Cart cart = getOrCreateCart(username);
         Product product = productRepository.findById(request.getProductId()).orElse(null);
         if (product == null) {
-            return ResponseEntity.badRequest().body("Product not found");
+            throw new IllegalArgumentException("Product not found");
         }
 
-        // check if this product is already in the cart, update quantity instead of duplicating
         for (CartItem item : cart.getItems()) {
             if (item.getProduct().getId().equals(product.getId())) {
                 item.setQuantity(item.getQuantity() + request.getQuantity());
-                cartRepository.save(cart);
-                return ResponseEntity.ok(cart);
+                return cartRepository.save(cart);
             }
         }
 
-        // not in cart yet — add as a new item
         CartItem newItem = new CartItem();
         newItem.setCart(cart);
         newItem.setProduct(product);
         newItem.setQuantity(request.getQuantity());
         cart.getItems().add(newItem);
 
-        cartRepository.save(cart);
-        return ResponseEntity.ok(cart);
+        return cartRepository.save(cart);
     }
 
-    @GetMapping
-    public ResponseEntity<?> viewCart(Authentication authentication) {
-        Cart cart = getOrCreateCart(authentication.getName());
-        return ResponseEntity.ok(cart);
+    public Cart viewCart(String username) {
+        return getOrCreateCart(username);
     }
 
-    @DeleteMapping("/remove/{productId}")
-    public ResponseEntity<?> removeFromCart(@PathVariable Long productId, Authentication authentication) {
-        Cart cart = getOrCreateCart(authentication.getName());
+    public Cart removeFromCart(Long productId, String username) {
+        Cart cart = getOrCreateCart(username);
         cart.getItems().removeIf(item -> item.getProduct().getId().equals(productId));
-        cartRepository.save(cart);
-        return ResponseEntity.ok(cart);
+        return cartRepository.save(cart);
     }
 }

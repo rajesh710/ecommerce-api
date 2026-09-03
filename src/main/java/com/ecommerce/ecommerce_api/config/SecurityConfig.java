@@ -1,5 +1,6 @@
-package com.ecommerce.ecommerce_api;
+package com.ecommerce.ecommerce_api.config;
 
+import com.ecommerce.ecommerce_api.security.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

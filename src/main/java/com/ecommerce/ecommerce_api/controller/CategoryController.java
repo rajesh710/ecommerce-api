@@ -1,6 +1,7 @@
-package com.ecommerce.ecommerce_api;
+package com.ecommerce.ecommerce_api.controller;
 
-import jakarta.validation.Valid;
+import com.ecommerce.ecommerce_api.entity.Category;
+import com.ecommerce.ecommerce_api.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,16 +12,15 @@ import java.util.List;
 public class CategoryController {
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryService categoryService;
 
     @PostMapping
     public Category createCategory(@RequestBody Category category) {
-        return categoryRepository.save(category);
+        return categoryService.createCategory(category);
     }
 
     @GetMapping
     public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+        return categoryService.getAllCategories();
     }
-
 }

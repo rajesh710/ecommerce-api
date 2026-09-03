@@ -1,4 +1,4 @@
-package com.ecommerce.ecommerce_api;
+package com.ecommerce.ecommerce_api.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
