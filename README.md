@@ -67,7 +67,6 @@ Entities: `User`, `Product`, `Category`, `Order`, `OrderItem`, `Cart`, `CartItem
 
 ## Known Limitations / Next Steps
 
-- No dedicated Service layer yet — business logic currently lives in Controllers; a refactor to extract Services would improve testability and separation of concerns
 - Stock deduction is not yet protected against race conditions under concurrent load — would require `@Transactional` with an atomic conditional update (`UPDATE ... WHERE stock >= ?`) to prevent overselling
 - No pagination on list endpoints yet — would add `Pageable` support for scalability with large datasets
 
